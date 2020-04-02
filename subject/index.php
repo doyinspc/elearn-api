@@ -1,5 +1,6 @@
 <?php
 // required headers
+//ini_set('display_errors', '1');
 header("Access-Control-Allow-Origin: *");
 header("Content-Type: application/json; charset=UTF-8");
 header("Access-Control-Allow-Methods: POST, PATCH, GET");
@@ -21,21 +22,8 @@ if($_SERVER['REQUEST_METHOD'] === 'GET')
 	$table = $queries['table'];
 	$token = $queries['token'];
 	$data = array();
-
-	if($cat == 'all')
-	{
-		$data = $op->select(TABLE_NAME, NULL, $query);
-	}
-
-	if($cat == 'cat')
-	{
-		$data = $op->select(TABLE_NAME, NULL, $query);
-	}
-
-	if($cat == 'one')
-	{
-		$data = $op->selectOne(TABLE_NAME, NULL, $query);
-	}
+	$data = $op->select(TABLE_NAME, NULL, $query);
+	
 	
 	if(is_array($data) && count($data) > 0 )
 	{

@@ -7,7 +7,7 @@ header("Access-Control-Max-Age: 3600");
 header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
 
 
-include 'common.php';
+include '../connect/common.php';
 include '../connect/connect.php';
 $op = new Db;
 //GET REQUEST

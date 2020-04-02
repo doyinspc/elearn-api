@@ -1,11 +1,17 @@
 <?php
 require_once('class.dbcontrol.php');
+require_once('common.php');
 
 class DB extends DbControl{
-	var $host = "localhost";
-	var $db = "cbt";
-	var $user = "root";
-	var $pass = "";
+	var $host = DB_HOST;
+	var $db = DB_NAME;
+	var $user = DB_USER;
+	var $pass = DB_PASSWD;
+
+	// var $host = "localhost";
+	// var $db = "cbt";
+	// var $user = "root";
+	// var $pass = "";
 	public function chrr($a, $b){
 		if($b == 0){
 			return ucwords(strtolower($a));
@@ -184,6 +190,65 @@ class DB extends DbControl{
 		
 	}
  
+    public function selectQuestion($topics = NULL){
+		
+		try
+		{ 
+		$sql0 = "SELECT 
+					GROUP_CONCAT(id || ':::' || name || ':::::') as names 
+				FROM 
+					`answers` 
+				WHERE  
+					`answers`.`questionID` = `questions`.`id` 
+				GROUP BY 
+					questionID ";
+      	$sql1 = "SELECT  
+      				GROUP_CONCAT(id || ':::' || name || ':::::') as names 
+      			FROM 
+      				`distractors` 
+      			WHERE  
+      				`distractors`.`questionID` = `questions`.`id` 
+      			GROUP BY 
+      				questionID ";
+      	$sql = "
+      		SELECT 
+      			*, 
+      			`questions`.`id` as qid, 
+      			`instructions`.`id` as ind, 
+      			`instructions`.`name` as namex, 
+      			`instructions`.`topicID` as td, 
+      			(".$sql0.") AS answer, 
+      			(".$sql1.") AS distractor 
+      		FROM 
+      			`questions` 
+      		LEFT JOIN 
+      			`instructions` 
+      		ON 
+      			`questions`.`instructionID` = `instructions`.`id` 
+      		WHERE 
+      			`instructions`.`topicID` 
+      		IN (".$topics.") 
+      		";
+		
+				$rows = array();
+				$dbh = $this->construct();	
+				$sth = $dbh->query($sql);
+				
+			while ($row = $sth->fetch(PDO::FETCH_OBJ)){
+				array_push($rows, $row);
+			}
+			return $rows;
+		}
+		catch (PDOException $e)
+		{
+		$msg = $db.":";
+		$msg .=  ("getMessage(): " . $e->getMessage() . "\n");
+		return $msg;
+		}
+		
+	}  
+    
+
     public function selectCountQuestion($table = NULL, $columns  = NULL, $where = NULL,  $orderby  = NULL, $groupby  = NULL){
 		$add = parent::whereClause($where);
 		$add .= parent::orderByClause($orderby);
