@@ -16,10 +16,10 @@ if($_SERVER['REQUEST_METHOD'] === 'GET')
 {
 	$queries = array();
 	parse_str($_SERVER['QUERY_STRING'], $queries);
-	$query = $queries['data'];
-	$cat = $queries['cat'];
-	$table = $queries['table'];
-	$token = $queries['token'];
+	$query = in_array('data', $queries) ? $queries['data'] ? NULL;
+	$cat = in_array('cat', $queries) ? $queries['cat'] ? NULL;
+	$table = in_array('table', $queries) ? $queries['table'] ? NULL;
+	$token = in_array('token', $queries) ? $queries['token'] ? NULL;
 	$data = array();
 
 	if($cat == 'all')
